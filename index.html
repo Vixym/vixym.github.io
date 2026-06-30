@@ -8,6 +8,10 @@
   <style>
     :root {
       color-scheme: light;
+      --bg: #fff;
+      --text: #111;
+      --muted: #666;
+      --border: #e0e0e0;
     }
 
     * {
@@ -17,18 +21,105 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: #fff;
-      color: #111;
+      background: var(--bg);
+      color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       font-size: 1rem;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
-    main {
-      max-width: 36rem;
+    ::selection {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    ::-moz-selection {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      max-width: 48rem;
       margin: 0 auto;
-      padding: 3rem 1.5rem 4rem;
+    }
+
+    .sidebar {
+      width: 5.5rem;
+      flex-shrink: 0;
+      padding: 2.5rem 0 3rem 1.5rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      position: relative;
+      display: block;
+      padding-right: 1rem;
+    }
+
+    .nav-link:hover {
+      text-decoration: none;
+      color: var(--muted);
+    }
+
+    .nav-link.active {
+      font-weight: 500;
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0.1em;
+      bottom: 0.1em;
+      width: 2px;
+      background: var(--text);
+    }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 2.5rem 1.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .clock {
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    main {
+      flex: 1;
     }
 
     h1 {
@@ -38,8 +129,38 @@
       margin: 0 0 0.25rem;
     }
 
+    h1.glitching {
+      animation: name-jitter 0.1s steps(2) infinite;
+    }
+
+    @keyframes name-jitter {
+
+      0%,
+      100% {
+        transform: translate(0);
+      }
+
+      50% {
+        transform: translate(-1px, 0);
+      }
+    }
+
+    .intro {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      align-items: flex-start;
+    }
+
+    .profile-pic {
+      width: calc(1.75rem * 1.6 + 0.25rem + 0.95rem * 1.6);
+      height: calc(1.75rem * 1.6 + 0.25rem + 0.95rem * 1.6);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
     .tagline {
-      margin: 0 0 2.5rem;
+      margin: 0;
       color: #444;
       font-size: 0.95rem;
     }
@@ -49,7 +170,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: #666;
+      color: var(--muted);
       margin: 2rem 0 0.75rem;
     }
 
@@ -64,7 +185,7 @@
     }
 
     li {
-      margin-bottom: 1rem;
+      margin-bottom: 0.85rem;
     }
 
     li:last-child {
@@ -72,7 +193,7 @@
     }
 
     a {
-      color: #111;
+      color: var(--text);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -81,207 +202,469 @@
       text-decoration-thickness: 2px;
     }
 
-    .item-title {
-      display: block;
-      font-weight: 500;
-    }
-
     .item-note {
       display: block;
-      margin-top: 0.2rem;
       font-size: 0.9rem;
       color: #555;
+    }
+
+    a .item-note {
+      color: inherit;
+    }
+
+    .marquee-wrapper {
+      overflow: hidden;
+      height: 200px;
+      width: 100%;
+      position: relative;
+      border-top: 1px solid var(--border);
+      padding-top: 0.5rem;
+    }
+
+    .marquee {
+      display: flex;
+      flex-direction: column;
+      animation: scroll-vertical 30s linear infinite;
+    }
+
+    .marquee-wrapper.bookshelf .marquee {
+      animation-duration: 18s;
+    }
+
+    .marquee li {
+      list-style: none;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes scroll-vertical {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-social {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+    }
+
+    .footer-social a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .footer-social a:hover {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .footer-social .sep {
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .ext {
+      font-size: 0.7rem;
+      margin-left: 0.1rem;
+    }
+
+    .footer-updated {
+      text-align: right;
+    }
+
+    .footer-updated .label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .footer-updated .date {
+      font-size: 0.8rem;
+      color: var(--text);
     }
   </style>
 </head>
 
 <body>
-  <main>
-    <h1>Vixym</h1>
-    <p class="tagline">"Life finds a way." - Jurassic Park</p>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <a href="#home" class="nav-link active">HOME</a>
+      </nav>
+    </aside>
 
-    <h2>Reading recs</h2>
-    <ul>
-      <li>
-        <a href="https://paulgraham.com/greatwork.html" target="_blank" rel="noopener noreferrer">
-          <span class="item-note">How to Do Great Work</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://www.paradigm.xyz/2024/11/pm-amm" target="_blank" rel="noopener noreferrer">
-          <span class="item-note">pm-AMM: A Uniform AMM for Prediction Markets
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="https://arxiv.org/abs/2406.05568" target="_blank" rel="noopener noreferrer">
-          <span class="item-note">SAMM: Sharded Automated Market Maker
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="https://ceur-ws.org/Vol-3802/paper17.pdf" target="_blank" rel="noopener noreferrer">
-          <span class="item-note">Seismic: Efficient and Effective Retrieval over
-            Learned Sparse Representation
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="https://www.brendangregg.com/blog/2024-03-10/ebpf-documentary.html" target="_blank"
-          rel="noopener noreferrer">
-          <span class="item-note">Origins of eBPF
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="https://dl.acm.org/doi/book/10.5555/2385452" target="_blank" rel="noopener noreferrer">
-          <span class="item-note">The Art of Multiprocessor Programming
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="https://abelay.github.io/6828seminar/papers/raza:unikernel.pdf" target="_blank"
-          rel="noopener noreferrer">
-          <span class="item-note">Integrating Unikernel Optimizations
-            in a General Purpose OS
-          </span>
-        </a>
-      </li>
+    <div class="content">
+      <header class="top-bar">
+        <span class="section-label" id="section-label">HOME</span>
+        <span id="clock" class="clock" aria-live="polite"></span>
+      </header>
 
-    </ul>
+      <main>
+        <div class="intro">
+          <img src="Rend-Arcanine.jpg" alt="" class="profile-pic">
+          <div class="intro-text">
+            <h1 id="name-glitch" aria-label="Victoria M.">Victoria Ma</h1>
+            <p class="tagline">"Sunrise, parabellum." - Disco Elysium</p>
+          </div>
+        </div>
 
-    <h2>Game recs</h2>
-    <div class="marquee-wrapper">
-      <ul class="marquee">
-        <li><span class="item-note">Legend of Zelda: Breath of the Wild</span></li>
-        <li><span class="item-note">Pokémon Mystery Dungeon: Explorers of Sky</span></li>
-        <li><span class="item-note">Dispatch</span></li>
-        <li><span class="item-note">Black Myth: Wukong</span></li>
-        <li><span class="item-note">Cult of the Lamb</span></li>
-        <li><span class="item-note">SUPERHOT</span></li>
-        <li><span class="item-note">Gris</span></li>
-        <li><span class="item-note">A Short Hike</span></li>
-        <li><span class="item-note">Baba is You</span></li>
-        <li><span class="item-note">Enter the Gungeon</span></li>
-        <li><span class="item-note">Ori and the Blind Forest</span></li>
-        <li><span class="item-note">Hyper Light Drifter</span></li>
-        <li><span class="item-note">Firewatch</span></li>
-        <li><span class="item-note">Terraria</span></li>
-        <li><span class="item-note">Disco Elysium</span></li>
-        <li><span class="item-note">Super Smash Bros. Ultimate</span></li>
-        <li><span class="item-note">Balatro</span></li>
-        <li><span class="item-note">Papers, Please</span></li>
-        <li><span class="item-note">Baldur's Gate 3</span></li>
-        <li><span class="item-note">Red Dead Redemption 2</span></li>
-        <li><span class="item-note">Cyberpunk 2077</span></li>
-        <li><span class="item-note">Rain World</span></li>
-        <li><span class="item-note">Dave the Diver</span></li>
-        <li><span class="item-note">Overcooked</span></li>
-        <li><span class="item-note">Portal</span></li>
-        <li><span class="item-note">Mutazione</span></li>
-        <li><span class="item-note">Moonlighter</span></li>
-        <li><span class="item-note">Dredge</span></li>
-        <li><span class="item-note">Minecraft</span></li>
-        <li><span class="item-note">League of Legends</span></li>
-        <li><span class="item-note">Inside</span></li>
-        <li><span class="item-note">Clair Obscur: Expedition 33</span></li>
-        <li><span class="item-note">Hollow Knight</span></li>
-        <li><span class="item-note">Silksong</span></li>
-        <li><span class="item-note">Celeste</span></li>
-        <li><span class="item-note">Undertale</span></li>
-        <li><span class="item-note">Stardew Valley</span></li>
-        <li><span class="item-note">Transistor</span></li>
-        <li><span class="item-note">Hades</span></li>
-        <li><span class="item-note">Resident Evil 4</span></li>
-        <li><span class="item-note">The Last of Us</span></li>
-        <li><span class="item-note">The Last of Us 2</span></li>
-        <li><span class="item-note">Life is Strange</span></li>
-        <li><span class="item-note">Life is Strange 2</span></li>
-        <li><span class="item-note">Detroit: Become Human</span></li>
-        <li><span class="item-note">Beyond: Two Souls</span></li>
-        <li><span class="item-note">Legend of Zelda: Breath of the Wild</span></li>
-        <li><span class="item-note">Pokémon Mystery Dungeon: Explorers of Sky</span></li>
-        <li><span class="item-note">Dispatch</span></li>
-        <li><span class="item-note">Black Myth: Wukong</span></li>
-        <li><span class="item-note">Cult of the Lamb</span></li>
-        <li><span class="item-note">SUPERHOT</span></li>
-        <li><span class="item-note">Gris</span></li>
-        <li><span class="item-note">A Short Hike</span></li>
-        <li><span class="item-note">Baba is You</span></li>
-        <li><span class="item-note">Enter the Gungeon</span></li>
-        <li><span class="item-note">Ori and the Blind Forest</span></li>
-        <li><span class="item-note">Hyper Light Drifter</span></li>
-        <li><span class="item-note">Firewatch</span></li>
-        <li><span class="item-note">Terraria</span></li>
-        <li><span class="item-note">Disco Elysium</span></li>
-        <li><span class="item-note">Super Smash Bros. Ultimate</span></li>
-        <li><span class="item-note">Balatro</span></li>
-        <li><span class="item-note">Papers, Please</span></li>
-        <li><span class="item-note">Baldur's Gate 3</span></li>
-        <li><span class="item-note">Red Dead Redemption 2</span></li>
-        <li><span class="item-note">Cyberpunk 2077</span></li>
-        <li><span class="item-note">Rain World</span></li>
-        <li><span class="item-note">Dave the Diver</span></li>
-        <li><span class="item-note">Overcooked</span></li>
-        <li><span class="item-note">Portal</span></li>
-        <li><span class="item-note">Mutazione</span></li>
-        <li><span class="item-note">Moonlighter</span></li>
-        <li><span class="item-note">Dredge</span></li>
-        <li><span class="item-note">Minecraft</span></li>
-        <li><span class="item-note">League of Legends</span></li>
-        <li><span class="item-note">Inside</span></li>
-        <li><span class="item-note">Clair Obscure: Expedition 33</span></li>
-        <li><span class="item-note">Hollow Knight</span></li>
-        <li><span class="item-note">Silksong</span></li>
-        <li><span class="item-note">Celeste</span></li>
-        <li><span class="item-note">Undertale</span></li>
-        <li><span class="item-note">Stardew Valley</span></li>
-        <li><span class="item-note">Transistor</span></li>
-        <li><span class="item-note">Hades</span></li>
-        <li><span class="item-note">Resident Evil 4</span></li>
-        <li><span class="item-note">The Last of Us</span></li>
-        <li><span class="item-note">The Last of Us 2</span></li>
-        <li><span class="item-note">Life is Strange</span></li>
-        <li><span class="item-note">Life is Strange 2</span></li>
-        <li><span class="item-note">Detroit: Become Human</span></li>
-        <li><span class="item-note">Beyond: Two Souls</span></li>
-      </ul>
+        <h2>Reading recommendations</h2>
+        <div class="marquee-wrapper bookshelf">
+          <ul class="marquee">
+            <li>
+              <a href="https://paulgraham.com/greatwork.html" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">How to Do Great Work</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.paradigm.xyz/2024/11/pm-amm" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">pm-AMM: A Uniform AMM for Prediction Markets</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://arxiv.org/abs/2406.05568" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">SAMM: Sharded Automated Market Maker</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://ceur-ws.org/Vol-3802/paper17.pdf" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">Seismic: Efficient and Effective Retrieval over Learned Sparse
+                  Representation</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.brendangregg.com/blog/2024-03-10/ebpf-documentary.html" target="_blank"
+                rel="noopener noreferrer">
+                <span class="item-note">Origins of eBPF</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://dl.acm.org/doi/book/10.5555/2385452" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">The Art of Multiprocessor Programming</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://abelay.github.io/6828seminar/papers/raza:unikernel.pdf" target="_blank"
+                rel="noopener noreferrer">
+                <span class="item-note">Integrating Unikernel Optimizations in a General Purpose OS</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://research.facebook.com/publications/a-practical-stereo-depth-system-for-smart-glasses/"
+                target="_blank" rel="noopener noreferrer">
+                <span class="item-note">A Practical Stereo Depth System for Smart Glasses</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/watch?v=dOfucXtyEsU&list=PLvv0ScY6vfd-fxDQiicYsjqAhJqZkkRH-&index=2"
+                target="_blank" rel="noopener noreferrer">
+                <span class="item-note">CppCon 2018: Matt Godbolt "The Bits Between the Bits: How We Get to
+                  main()"</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://pdos.csail.mit.edu/6.828/2025/xv6/book-riscv-rev5.pdf" target="_blank"
+                rel="noopener noreferrer">
+                <span class="item-note">xv6: a simple, Unix-like teaching operating system</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://paulgraham.com/greatwork.html" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">How to Do Great Work</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.paradigm.xyz/2024/11/pm-amm" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">pm-AMM: A Uniform AMM for Prediction Markets</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://arxiv.org/abs/2406.05568" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">SAMM: Sharded Automated Market Maker</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://ceur-ws.org/Vol-3802/paper17.pdf" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">Seismic: Efficient and Effective Retrieval over Learned Sparse
+                  Representation</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.brendangregg.com/blog/2024-03-10/ebpf-documentary.html" target="_blank"
+                rel="noopener noreferrer">
+                <span class="item-note">Origins of eBPF</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://dl.acm.org/doi/book/10.5555/2385452" target="_blank" rel="noopener noreferrer">
+                <span class="item-note">The Art of Multiprocessor Programming</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://abelay.github.io/6828seminar/papers/raza:unikernel.pdf" target="_blank"
+                rel="noopener noreferrer">
+                <span class="item-note">Integrating Unikernel Optimizations in a General Purpose OS</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://research.facebook.com/publications/a-practical-stereo-depth-system-for-smart-glasses/"
+                target="_blank" rel="noopener noreferrer">
+                <span class="item-note">A Practical Stereo Depth System for Smart Glasses</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/watch?v=dOfucXtyEsU&list=PLvv0ScY6vfd-fxDQiicYsjqAhJqZkkRH-&index=2"
+                target="_blank" rel="noopener noreferrer">
+                <span class="item-note">CppCon 2018: Matt Godbolt "The Bits Between the Bits: How We Get to
+                  main()"</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://pdos.csail.mit.edu/6.828/2025/xv6/book-riscv-rev5.pdf" target="_blank"
+                rel="noopener noreferrer">
+                <span class="item-note">xv6: a simple, Unix-like teaching operating system</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <h2>Game recommendations</h2>
+        <div class="marquee-wrapper">
+          <ul class="marquee">
+            <li><span class="item-note">Legend of Zelda: Breath of the Wild</span></li>
+            <li><span class="item-note">Pokémon Mystery Dungeon: Explorers of Sky</span></li>
+            <li><span class="item-note">Dispatch</span></li>
+            <li><span class="item-note">Black Myth: Wukong</span></li>
+            <li><span class="item-note">Cult of the Lamb</span></li>
+            <li><span class="item-note">SUPERHOT</span></li>
+            <li><span class="item-note">Gris</span></li>
+            <li><span class="item-note">A Short Hike</span></li>
+            <li><span class="item-note">Baba is You</span></li>
+            <li><span class="item-note">Enter the Gungeon</span></li>
+            <li><span class="item-note">Ori and the Blind Forest</span></li>
+            <li><span class="item-note">Hyper Light Drifter</span></li>
+            <li><span class="item-note">Firewatch</span></li>
+            <li><span class="item-note">Terraria</span></li>
+            <li><span class="item-note">Disco Elysium</span></li>
+            <li><span class="item-note">Zero Parades</span></li>
+            <li><span class="item-note">Pinstripe</span></li>
+            <li><span class="item-note">Super Smash Bros. Ultimate</span></li>
+            <li><span class="item-note">Balatro</span></li>
+            <li><span class="item-note">Papers, Please</span></li>
+            <li><span class="item-note">Baldur's Gate 3</span></li>
+            <li><span class="item-note">Red Dead Redemption 2</span></li>
+            <li><span class="item-note">Cyberpunk 2077</span></li>
+            <li><span class="item-note">Rain World</span></li>
+            <li><span class="item-note">Dave the Diver</span></li>
+            <li><span class="item-note">Overcooked</span></li>
+            <li><span class="item-note">Portal</span></li>
+            <li><span class="item-note">Mutazione</span></li>
+            <li><span class="item-note">Moonlighter</span></li>
+            <li><span class="item-note">Dredge</span></li>
+            <li><span class="item-note">Minecraft</span></li>
+            <li><span class="item-note">League of Legends</span></li>
+            <li><span class="item-note">Inside</span></li>
+            <li><span class="item-note">Clair Obscur: Expedition 33</span></li>
+            <li><span class="item-note">Hollow Knight</span></li>
+            <li><span class="item-note">Silksong</span></li>
+            <li><span class="item-note">Celeste</span></li>
+            <li><span class="item-note">Undertale</span></li>
+            <li><span class="item-note">Deltarune</span></li>
+            <li><span class="item-note">Stardew Valley</span></li>
+            <li><span class="item-note">Transistor</span></li>
+            <li><span class="item-note">Hades</span></li>
+            <li><span class="item-note">Resident Evil 4</span></li>
+            <li><span class="item-note">The Last of Us</span></li>
+            <li><span class="item-note">The Last of Us 2</span></li>
+            <li><span class="item-note">Life is Strange</span></li>
+            <li><span class="item-note">Life is Strange 2</span></li>
+            <li><span class="item-note">Detroit: Become Human</span></li>
+            <li><span class="item-note">Beyond: Two Souls</span></li>
+            <li><span class="item-note">Hitman</span></li>
+            <li><span class="item-note">PokéPark Wii: Pikachu's Adventure</span></li>
+            <li><span class="item-note">Harvest Moon: Animal Parade</span></li>
+            <li><span class="item-note">Jusant</span></li>
+            <li><span class="item-note">Legend of Zelda: Breath of the Wild</span></li>
+            <li><span class="item-note">Pokémon Mystery Dungeon: Explorers of Sky</span></li>
+            <li><span class="item-note">Dispatch</span></li>
+            <li><span class="item-note">Black Myth: Wukong</span></li>
+            <li><span class="item-note">Cult of the Lamb</span></li>
+            <li><span class="item-note">SUPERHOT</span></li>
+            <li><span class="item-note">Gris</span></li>
+            <li><span class="item-note">A Short Hike</span></li>
+            <li><span class="item-note">Baba is You</span></li>
+            <li><span class="item-note">Enter the Gungeon</span></li>
+            <li><span class="item-note">Ori and the Blind Forest</span></li>
+            <li><span class="item-note">Hyper Light Drifter</span></li>
+            <li><span class="item-note">Firewatch</span></li>
+            <li><span class="item-note">Terraria</span></li>
+            <li><span class="item-note">Disco Elysium</span></li>
+            <li><span class="item-note">Zero Parades</span></li>
+            <li><span class="item-note">Pinstripe</span></li>
+            <li><span class="item-note">Super Smash Bros. Ultimate</span></li>
+            <li><span class="item-note">Balatro</span></li>
+            <li><span class="item-note">Papers, Please</span></li>
+            <li><span class="item-note">Baldur's Gate 3</span></li>
+            <li><span class="item-note">Red Dead Redemption 2</span></li>
+            <li><span class="item-note">Cyberpunk 2077</span></li>
+            <li><span class="item-note">Rain World</span></li>
+            <li><span class="item-note">Dave the Diver</span></li>
+            <li><span class="item-note">Overcooked</span></li>
+            <li><span class="item-note">Portal</span></li>
+            <li><span class="item-note">Mutazione</span></li>
+            <li><span class="item-note">Moonlighter</span></li>
+            <li><span class="item-note">Dredge</span></li>
+            <li><span class="item-note">Minecraft</span></li>
+            <li><span class="item-note">League of Legends</span></li>
+            <li><span class="item-note">Inside</span></li>
+            <li><span class="item-note">Clair Obscure: Expedition 33</span></li>
+            <li><span class="item-note">Hollow Knight</span></li>
+            <li><span class="item-note">Silksong</span></li>
+            <li><span class="item-note">Celeste</span></li>
+            <li><span class="item-note">Undertale</span></li>
+            <li><span class="item-note">Deltarune</span></li>
+            <li><span class="item-note">Stardew Valley</span></li>
+            <li><span class="item-note">Transistor</span></li>
+            <li><span class="item-note">Hades</span></li>
+            <li><span class="item-note">Resident Evil 4</span></li>
+            <li><span class="item-note">The Last of Us</span></li>
+            <li><span class="item-note">The Last of Us 2</span></li>
+            <li><span class="item-note">Life is Strange</span></li>
+            <li><span class="item-note">Life is Strange 2</span></li>
+            <li><span class="item-note">Detroit: Become Human</span></li>
+            <li><span class="item-note">Beyond: Two Souls</span></li>
+            <li><span class="item-note">Hitman</span></li>
+            <li><span class="item-note">PokéPark Wii: Pikachu's Adventure</span></li>
+            <li><span class="item-note">Harvest Moon: Animal Parade</span></li>
+            <li><span class="item-note">Jusant</span></li>
+          </ul>
+        </div>
+
+      </main>
+
+      <footer>
+        <div class="footer-social">
+          <a href="https://x.com/victoriaxyma" target="_blank" rel="noopener noreferrer">x (twitter)<span class="ext">
+              ↗</span></a>
+          <span class="sep">/</span>
+          <a href="https://github.com/Vixym" target="_blank" rel="noopener noreferrer">github<span class="ext">
+              ↗</span></a>
+          <span class="sep">/</span>
+          <a href="https://www.linkedin.com/in/vxma" target="_blank" rel="noopener noreferrer">linkedin<span
+              class="ext">
+              ↗</span></a>
+        </div>
+        <div class="footer-updated">
+          <span class="label">LAST UPDATED</span>
+          <span class="date" id="last-updated"></span>
+        </div>
+      </footer>
     </div>
+  </div>
 
-    <style>
-      .marquee-wrapper {
-        overflow: hidden;
-        height: 200px;
-        /* adjust as needed */
-        width: 100%;
-        position: relative;
-      }
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZoneName: "short",
+      }).formatToParts(now);
 
-      .marquee {
-        display: flex;
-        flex-direction: column;
-        animation: scroll-vertical 30s linear infinite;
-      }
+      const get = (type) => parts.find((p) => p.type === type)?.value ?? "";
+      document.getElementById("clock").textContent =
+        `${get("hour")}:${get("minute")}:${get("second")} ${get("timeZoneName")}`;
+    }
 
-      .marquee li {
-        list-style: none;
-        margin-bottom: 0.5rem;
-      }
+    updateClock();
+    setInterval(updateClock, 1000);
 
-      /* vertical scroll animation */
-      @keyframes scroll-vertical {
-        0% {
-          transform: translateY(0);
+    const updated = new Date(document.lastModified);
+    const dd = String(updated.getDate()).padStart(2, "0");
+    const mm = String(updated.getMonth() + 1).padStart(2, "0");
+    const yy = String(updated.getFullYear()).slice(-2);
+    document.getElementById("last-updated").textContent = `${dd}/${mm}/${yy}`;
+
+    const NAME_TEXT = "Victoria M.";
+    const GLITCH_CHARS = "!<>-_\\/[]{}—=+*^?#%&@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const nameEl = document.getElementById("name-glitch");
+    let glitching = false;
+
+    function randomChar() {
+      return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+    }
+
+    function scrambleFrame(revealedCount) {
+      return [...NAME_TEXT]
+        .map((char, index) => {
+          if (char === " " || char === ".") return char;
+          if (index < revealedCount) return NAME_TEXT[index];
+          return randomChar();
+        })
+        .join("");
+    }
+
+    function runNameGlitch() {
+      if (glitching) return;
+      glitching = true;
+      nameEl.classList.add("glitching");
+
+      let frame = 0;
+      const scrambleFrames = 8;
+      const revealSteps = NAME_TEXT.length * 2;
+      const frameMs = 35;
+
+      const tick = () => {
+        if (frame < scrambleFrames) {
+          nameEl.textContent = scrambleFrame(0);
+        } else {
+          const revealProgress = frame - scrambleFrames;
+          const revealed = Math.floor(
+            (revealProgress / revealSteps) * NAME_TEXT.length
+          );
+          nameEl.textContent = scrambleFrame(revealed);
         }
 
-        100% {
-          transform: translateY(-50%);
+        frame += 1;
+        if (frame <= scrambleFrames + revealSteps) {
+          setTimeout(tick, frameMs);
+        } else {
+          nameEl.textContent = NAME_TEXT;
+          nameEl.classList.remove("glitching");
+          glitching = false;
         }
+      };
 
-        /* scroll up half the content (duplicate needed) */
-      }
-    </style>
-  </main>
+      tick();
+    }
+
+    setInterval(runNameGlitch, 3500);
+    nameEl.addEventListener("mouseenter", runNameGlitch);
+  </script>
 </body>
 
 </html>
